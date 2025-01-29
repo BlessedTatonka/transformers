@@ -1349,6 +1349,9 @@ class PreTrainedModel(nn.Module, ModuleUtilsMixin, GenerationMixin, PushToHubMix
         A method executed at the end of each Transformer model initialization, to execute code that needs the model's
         modules properly initialized (such as weight initialization).
         """
+        if (torch.version.hip and not torch.cuda.is_initialized()):
+            torch.cuda.init()
+
         self.init_weights()
         self._backward_compatibility_gradient_checkpointing()
         # If current model is a base model, attach `base_model_tp_plan` from config
